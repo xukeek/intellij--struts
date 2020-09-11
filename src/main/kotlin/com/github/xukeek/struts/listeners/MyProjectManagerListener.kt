@@ -1,8 +1,8 @@
-package com.github.xukeek.intellijstruts.listeners
+package com.github.xukeek.struts.listeners
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManagerListener
-import com.github.xukeek.intellijstruts.services.MyProjectService
+import com.github.xukeek.struts.services.MyProjectService
 
 internal class MyProjectManagerListener : ProjectManagerListener {
 

@@ -1,4 +1,4 @@
-package com.github.xukeek.intellijstruts
+package com.github.xukeek.struts
 
 import com.intellij.AbstractBundle
 import org.jetbrains.annotations.NonNls

@@ -1,6 +1,6 @@
-package com.github.xukeek.intellijstruts.services
+package com.github.xukeek.struts.services
 
-import com.github.xukeek.intellijstruts.MyBundle
+import com.github.xukeek.struts.MyBundle
 
 class MyApplicationService {
 

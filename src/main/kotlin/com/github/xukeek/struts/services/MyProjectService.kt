@@ -1,7 +1,7 @@
-package com.github.xukeek.intellijstruts.services
+package com.github.xukeek.struts.services
 
 import com.intellij.openapi.project.Project
-import com.github.xukeek.intellijstruts.MyBundle
+import com.github.xukeek.struts.MyBundle
 
 class MyProjectService(project: Project) {
 
