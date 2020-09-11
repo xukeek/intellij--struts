@@ -67,7 +67,7 @@ object StrutsXmlUtil {
         val result: MutableList<PsiFile> = ArrayList()
         for (s in filePath) {
             if (StringUtils.isNotEmpty(s)) {
-                val filePaths = s.split("[/\\\\]").toTypedArray()
+                val filePaths = s.split("[/\\\\]".toRegex()).toTypedArray()
                 val fileName = filePaths[filePaths.size - 1]
                 val fileRelativeModulePath = s.substring(filePaths[0].length)
                 val fileRelativeModule = findFileRelativeModule(filePaths)
