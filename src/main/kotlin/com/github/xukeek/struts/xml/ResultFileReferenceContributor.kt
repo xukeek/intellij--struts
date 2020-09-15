@@ -6,7 +6,6 @@ import com.intellij.patterns.XmlPatterns
 import com.intellij.psi.*
 import com.intellij.psi.xml.XmlTag
 import com.intellij.util.ProcessingContext
-import com.intellij.util.containers.toArray
 
 class ResultFileReferenceContributor : PsiReferenceContributor() {
     override fun registerReferenceProviders(registrar: PsiReferenceRegistrar) {
@@ -26,15 +25,12 @@ class ResultFileReferenceContributor : PsiReferenceContributor() {
             if (resultXmlTag.valid()) {
                 val project = element.project
                 //{xxx-system/xxx.ftl}
-                if (!resultXmlTag.valid()) {
-                    return ResolveResult.EMPTY_ARRAY
-                }
                 val allMethodReturnFiles: List<PsiFile> = StrutsXmlUtil.getActionViewFiles(project, listOf(resultXmlTag.mappedFilePath))
                 val results: MutableList<ResolveResult> = ArrayList(allMethodReturnFiles.size)
                 for (returnFile in allMethodReturnFiles) {
                     results.add(PsiElementResolveResult(returnFile))
                 }
-                return results.toArray(ResolveResult.EMPTY_ARRAY)
+                return results.toTypedArray()
             }
             return ResolveResult.EMPTY_ARRAY
         }
