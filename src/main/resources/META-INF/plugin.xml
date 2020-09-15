@@ -5,12 +5,15 @@
 
     <!-- Product and plugin compatibility requirements -->
     <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
-    <depends>com.intellij.modules.platform</depends>
+    <!--<depends>com.intellij.modules.platform</depends>-->
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="com.github.xukeek.struts.services.MyApplicationService"/>
         <projectService serviceImplementation="com.github.xukeek.struts.services.MyProjectService"/>
-        <psi.referenceContributor implementation="com.github.xukeek.struts.xml.ResultFileReferenceContributor"/>
+        <psi.referenceContributor implementation="com.github.xukeek.struts.extensions.ResultFileReferenceContributor"/>
+        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.github.xukeek.struts.extensions.LineMarkerProvider"/>
+        <httpRequestHandler implementation="com.github.xukeek.struts.extensions.ChromeRestService"/>
+        <vfs.asyncListener implementation="com.github.xukeek.struts.extensions.StrutsFileChangeListener"/>
     </extensions>
 
     <projectListeners>

@@ -1,4 +1,4 @@
-package com.github.xukeek.struts.xml
+package com.github.xukeek.struts.extensions
 
 import com.github.xukeek.struts.utils.StrutsXmlUtil
 import com.github.xukeek.struts.wrappers.ResultXmlTag

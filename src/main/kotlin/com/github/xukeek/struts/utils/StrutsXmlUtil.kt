@@ -14,6 +14,8 @@ import org.jetbrains.annotations.NotNull
 import java.util.*
 
 object StrutsXmlUtil {
+    val FILE_NAME = "struts.xml"
+
     internal interface Struts : DomElement {
         val packages: List<Package?>?
     }
@@ -71,13 +73,13 @@ object StrutsXmlUtil {
                 val fileName = filePaths[filePaths.size - 1]
                 val fileRelativeModulePath = s.substring(filePaths[0].length)
                 val fileRelativeModule = findFileRelativeModule(filePaths)
-                if (StringUtils.isNotEmpty(fileName) && StringUtils.isNotEmpty(fileRelativeModule)) {
+                if (fileRelativeModule != null && StringUtils.isNotEmpty(fileName) && StringUtils.isNotEmpty(fileRelativeModule)) {
                     val files = FilenameIndex.getFilesByName(project, fileName, GlobalSearchScope.allScope(project))
-                    val f: TemplateFile? = files.filter { f ->
-                        val path = f.virtualFile.path
-                        path.contains(fileRelativeModulePath) && path.contains(fileRelativeModule!!)
-                    }.map { f -> TemplateFile(f) }.min()!!
-                    if (f != null) result.add(f.psiFile)
+                            .filter { f -> f.virtualFile.path.contains(fileRelativeModulePath) && f.virtualFile.path.contains(fileRelativeModule) }
+                            .map { f -> TemplateFile(f) }.sorted()
+                    if (files.isNotEmpty()) {
+                        result.add(files[0].psiFile)
+                    }
                 }
             }
         }
