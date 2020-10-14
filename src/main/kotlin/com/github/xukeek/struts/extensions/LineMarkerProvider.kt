@@ -16,9 +16,9 @@ import java.util.*
 
 class LineMarkerProvider : RelatedItemLineMarkerProvider() {
 
-    override fun collectNavigationMarkers(element: PsiElement, result: MutableCollection<in RelatedItemLineMarkerInfo<PsiElement>>) {
+    override fun collectNavigationMarkers(element: PsiElement, result: MutableCollection<in RelatedItemLineMarkerInfo<*>>) {
         val project = element.project
-        val method: PsiElement = element.parent
+        val method: PsiElement? = element.parent
         if (element is PsiIdentifier && method is PsiMethod) {
             if (StrutsActionUtil.isStrutsMethod(method)) {
                 val module = ModuleUtil.findModuleForPsiElement(element)

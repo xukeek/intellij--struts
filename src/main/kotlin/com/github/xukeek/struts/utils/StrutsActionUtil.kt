@@ -6,7 +6,7 @@ import com.intellij.psi.util.PsiUtil
 import java.util.*
 
 object StrutsActionUtil {
-    val ANNOTATION_NAMES: MutableSet<String> = HashSet()
+    private val ANNOTATION_NAMES: MutableSet<String> = HashSet()
     val STRUTS_ICON = IconLoader.getIcon("/icons/action_small.svg")
 
     init {
@@ -15,9 +15,9 @@ object StrutsActionUtil {
         ANNOTATION_NAMES.add("com.rayse.plugins.auth.annotations.RightMethod")
     }
 
-    fun summarizeAllReturns(method: PsiMethod?): Set<String> {
+    fun summarizeAllReturns(method: PsiMethod): Set<String> {
         val methodReturns: MutableSet<String> = HashSet()
-        val returnStatements = PsiUtil.findReturnStatements(method!!)
+        val returnStatements = PsiUtil.findReturnStatements(method)
         Arrays.stream(returnStatements).forEach { s: PsiReturnStatement ->
             val value = s.returnValue
             resolveLiteralFromExpression(methodReturns, value)
@@ -35,15 +35,14 @@ object StrutsActionUtil {
             } else if (expression is PsiMethodCallExpression) {
                 val valueCall = expression.resolveMethod()
                 if (valueCall != null) {
-                    literals.addAll(summarizeAllReturns(valueCall)!!)
+                    literals.addAll(summarizeAllReturns(valueCall))
                 }
             } else if (expression is PsiConditionalExpression) {
-                val conditionalExpression = expression
-                if (conditionalExpression.thenExpression != null) {
-                    resolveLiteralFromExpression(literals, conditionalExpression.thenExpression)
+                if (expression.thenExpression != null) {
+                    resolveLiteralFromExpression(literals, expression.thenExpression)
                 }
-                if (conditionalExpression.elseExpression != null) {
-                    resolveLiteralFromExpression(literals, conditionalExpression.elseExpression)
+                if (expression.elseExpression != null) {
+                    resolveLiteralFromExpression(literals, expression.elseExpression)
                 }
             } else if (expression is PsiReferenceExpression) {
                 for (ref in expression.getReferences()) {
@@ -57,11 +56,12 @@ object StrutsActionUtil {
         }
     }
 
-
     fun isStrutsMethod(method: PsiMethod?): Boolean {
         return method != null && method.returnType != null &&
-                method.returnType!!.equalsToText(CommonClassNames.JAVA_LANG_STRING) && method.parameterList.parametersCount == 0 && method.modifierList.annotations.isNotEmpty() &&
+                method.returnType!!.equalsToText(CommonClassNames.JAVA_LANG_STRING) &&
+                method.parameterList.parametersCount == 0 &&
+                method.modifierList.annotations.isNotEmpty() &&
                 Arrays.stream(method.modifierList.annotations)
-                        .anyMatch { a: PsiAnnotation -> StrutsActionUtil.ANNOTATION_NAMES.contains(a.qualifiedName) }
+                        .anyMatch { a: PsiAnnotation -> ANNOTATION_NAMES.contains(a.qualifiedName) }
     }
 }

@@ -10,13 +10,13 @@ import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.openapi.vfs.AsyncFileListener
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent
 
-class StrutsFileChangeListener : AsyncFileListener{
+class StrutsFileChangeListener : AsyncFileListener {
 
     override fun prepareChange(events: MutableList<out VFileEvent>): AsyncFileListener.ChangeApplier? {
         return StrutsFileChangeApplier(events)
     }
 
-    inner class StrutsFileChangeApplier(private val events: MutableList<out VFileEvent>): AsyncFileListener.ChangeApplier {
+    inner class StrutsFileChangeApplier(private val events: MutableList<out VFileEvent>) : AsyncFileListener.ChangeApplier {
         override fun afterVfsChange() {
             for (event in events) {
                 if (event.isFromSave && event.file != null) {

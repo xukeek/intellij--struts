@@ -75,7 +75,7 @@ object StrutsXmlUtil {
                 val fileRelativeModule = findFileRelativeModule(filePaths)
                 if (fileRelativeModule != null && StringUtils.isNotEmpty(fileName) && StringUtils.isNotEmpty(fileRelativeModule)) {
                     val files = FilenameIndex.getFilesByName(project, fileName, GlobalSearchScope.allScope(project))
-                            .filter { f -> f.virtualFile.path.contains(fileRelativeModulePath) && f.virtualFile.path.contains(fileRelativeModule) }
+                            .filter { f -> isFileMatch(f.virtualFile.path, fileRelativeModulePath) }
                             .map { f -> TemplateFile(f) }.sorted()
                     if (files.isNotEmpty()) {
                         result.add(files[0].psiFile)
@@ -91,4 +91,9 @@ object StrutsXmlUtil {
             filePaths[0].substring(1, filePaths[0].length - 1)
         } else null
     }
+
+    private fun isFileMatch(fileName: String, fileRelativeModule: String): Boolean {
+        return fileName.substring(fileName.indexOf("views") + 5) == fileRelativeModule
+    }
+
 }
