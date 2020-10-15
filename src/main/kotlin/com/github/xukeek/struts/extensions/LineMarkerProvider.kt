@@ -23,8 +23,8 @@ class LineMarkerProvider : RelatedItemLineMarkerProvider() {
             if (StrutsActionUtil.isStrutsMethod(method)) {
                 val module = ModuleUtil.findModuleForPsiElement(element)
                 if (module != null) {
-                    val moduleService: MyProjectService = project.getService(MyProjectService::class.java)
-                    val moduleActionConfigs: List<ActionConfig> = moduleService.getActionConfigs(project)
+                    val projectService: MyProjectService = project.getService(MyProjectService::class.java)
+                    val moduleActionConfigs: List<ActionConfig> = projectService.getActionConfigs()
                     val aboutFiles: MutableList<PsiElement> = ArrayList()
                     val psiClass: PsiClass? = method.containingClass
                     if (psiClass != null) {

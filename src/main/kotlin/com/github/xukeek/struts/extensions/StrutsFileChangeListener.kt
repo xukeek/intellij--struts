@@ -26,7 +26,7 @@ class StrutsFileChangeListener : AsyncFileListener {
                         for (project in openedProjects) {
                             if (ProjectFileIndex.getInstance(project).isInContent(file)) {
                                 Notifications.Bus.notify(Notification("Struts", "Struts file changed", event.path, NotificationType.INFORMATION))
-                                project.getService(MyProjectService::class.java).reloadFile(project, file)
+                                project.getService(MyProjectService::class.java).reloadFile(file)
                             }
                         }
                     }

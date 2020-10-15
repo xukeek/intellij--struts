@@ -5,16 +5,14 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
-import com.intellij.psi.xml.XmlAttribute
 import com.intellij.psi.xml.XmlFile
-import com.intellij.psi.xml.XmlTag
 import com.intellij.util.xml.DomElement
 import org.apache.commons.lang.StringUtils
 import org.jetbrains.annotations.NotNull
 import java.util.*
 
 object StrutsXmlUtil {
-    val FILE_NAME = "struts.xml"
+    const val FILE_NAME = "struts.xml"
 
     internal interface Struts : DomElement {
         val packages: List<Package?>?
@@ -47,7 +45,7 @@ object StrutsXmlUtil {
                         val name = actionTag.getAttribute("name")?.value
                         val classStr = actionTag.getAttribute("class")?.value
                         if (nameSpace != null && name != null && classStr != null) {
-                            val config = ActionConfig(nameSpace, name, classStr)
+                            val config = ActionConfig(xmlFile, nameSpace, name, classStr)
                             val resultTags = actionTag.findSubTags("result")
                             for (resultTag in resultTags) {
                                 val resultName = resultTag.getAttribute("name")?.value

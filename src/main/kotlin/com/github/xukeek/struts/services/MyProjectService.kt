@@ -9,15 +9,16 @@ import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.xml.XmlFile
+import java.util.stream.Collectors
 
-class MyProjectService(project: Project) {
+class MyProjectService(private val project: Project) {
     private var fileCache: MutableMap<String, List<ActionConfig>> = mutableMapOf()
 
     init {
         println(MyBundle.message("projectService", project.name))
     }
 
-    fun getActionConfigs(project: Project): List<ActionConfig> {
+    fun getActionConfigs(): List<ActionConfig> {
         val strutsFiles = FilenameIndex.getFilesByName(project, StrutsXmlUtil.FILE_NAME, GlobalSearchScope.allScope(project));
         for (strutsFile in strutsFiles) {
             if (!fileCache.containsKey(strutsFile.virtualFile.path)) {
@@ -27,7 +28,7 @@ class MyProjectService(project: Project) {
         return fileCache.values.flatten()
     }
 
-    fun reloadFile(project: Project, file: VirtualFile) {
+    fun reloadFile(file: VirtualFile) {
         val psiFile = PsiManager.getInstance(project).findFile(file)
         if (psiFile != null) {
             fileCache[file.path] = StrutsXmlUtil.buildConfigs(psiFile as XmlFile)

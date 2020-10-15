@@ -17,10 +17,10 @@ class MyApplicationService {
 
     fun findActionAndOpenIt(actionUrl: String) {
         val openedProjects = ProjectManager.getInstance().openProjects
-        for (i in openedProjects.size - 1 downTo -1 + 1) {
+        for (i in openedProjects.size - 1 downTo 0) {
             val mappedProject = openedProjects[i]
-            val moduleService: MyProjectService = mappedProject.getService(MyProjectService::class.java)
-            val moduleActionConfigs: List<ActionConfig> = moduleService.getActionConfigs(mappedProject)
+            val projectService: MyProjectService = mappedProject.getService(MyProjectService::class.java)
+            val moduleActionConfigs: List<ActionConfig> = projectService.getActionConfigs()
             for (moduleActionConfig in moduleActionConfigs) {
                 if (moduleActionConfig.matchServlet(actionUrl)) {
                     navigate2ClassFile(mappedProject, moduleActionConfig)
@@ -29,13 +29,11 @@ class MyApplicationService {
         }
     }
 
-    private fun navigate2ClassFile(project: Project?, actionConfig: ActionConfig?) {
-        if (project != null && actionConfig != null) {
-            ApplicationManager.getApplication().invokeLater {
-                val actionClassFile = JavaPsiFacade.getInstance(project).findClass(actionConfig.className, GlobalSearchScope.projectScope(project))
-                if (actionClassFile != null) {
-                    OpenSourceUtil.navigate(false, actionClassFile)
-                }
+    private fun navigate2ClassFile(project: Project, actionConfig: ActionConfig) {
+        ApplicationManager.getApplication().invokeLater {
+            val actionClassFile = JavaPsiFacade.getInstance(project).findClass(actionConfig.className, GlobalSearchScope.projectScope(project))
+            if (actionClassFile != null) {
+                OpenSourceUtil.navigate(false, actionClassFile)
             }
         }
     }
