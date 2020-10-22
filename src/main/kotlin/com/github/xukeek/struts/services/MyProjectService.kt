@@ -9,7 +9,6 @@ import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.xml.XmlFile
-import java.util.stream.Collectors
 
 class MyProjectService(private val project: Project) {
     private var fileCache: MutableMap<String, List<ActionConfig>> = mutableMapOf()
@@ -25,6 +24,10 @@ class MyProjectService(private val project: Project) {
                 fileCache[strutsFile.virtualFile.path] = StrutsXmlUtil.buildConfigs(strutsFile as XmlFile)
             }
         }
+        return fileCache.values.flatten()
+    }
+
+    fun getAllActionConfigs(): List<ActionConfig> {
         return fileCache.values.flatten()
     }
 
