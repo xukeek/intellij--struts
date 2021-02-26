@@ -51,7 +51,13 @@ object StrutsXmlUtil {
                                 val resultName = resultTag.getAttribute("name")?.value
                                 val resultType = resultTag.getAttribute("type")?.value
                                 if (resultName != null && resultType != null) {
-                                    config.addResultConfig(ActionConfig.ResultConfig(resultName, resultType, resultTag.value.trimmedText))
+                                    config.addResultConfig(
+                                        ActionConfig.ResultConfig(
+                                            resultName,
+                                            resultType,
+                                            resultTag.value.trimmedText
+                                        )
+                                    )
                                 }
                             }
                             result.add(config)
@@ -71,10 +77,10 @@ object StrutsXmlUtil {
                 val fileName = filePaths[filePaths.size - 1]
                 val fileRelativeModulePath = s.substring(filePaths[0].length)
                 val fileRelativeModule = findFileRelativeModule(filePaths)
-                if (fileRelativeModule != null && StringUtils.isNotEmpty(fileName) && StringUtils.isNotEmpty(fileRelativeModule)) {
+                if (StringUtils.isNotEmpty(fileName) && StringUtils.isNotEmpty(fileRelativeModule)) {
                     val files = FilenameIndex.getFilesByName(project, fileName, GlobalSearchScope.allScope(project))
-                            .filter { f -> isFileMatch(f.virtualFile.path, fileRelativeModulePath) }
-                            .map { f -> TemplateFile(f) }.sorted()
+                        .filter { f -> isFileMatch(f.virtualFile.path, fileRelativeModulePath, fileRelativeModule!!) }
+                        .map { f -> TemplateFile(f) }.sorted()
                     if (files.isNotEmpty()) {
                         result.add(files[0].psiFile)
                     }
@@ -90,8 +96,8 @@ object StrutsXmlUtil {
         } else null
     }
 
-    private fun isFileMatch(fileName: String, fileRelativeModule: String): Boolean {
-        return fileName.substring(fileName.indexOf("views") + 5) == fileRelativeModule
+    private fun isFileMatch(virtualFilePath: String, fileRelativeModulePath: String, moduleName: String): Boolean {
+        return virtualFilePath.contains(fileRelativeModulePath) && virtualFilePath.contains(moduleName)
     }
 
 }

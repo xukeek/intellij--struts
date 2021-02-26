@@ -31,7 +31,8 @@ class MyApplicationService {
 
     private fun navigate2ClassFile(project: Project, actionConfig: ActionConfig) {
         ApplicationManager.getApplication().invokeLater {
-            val actionClassFile = JavaPsiFacade.getInstance(project).findClass(actionConfig.className, GlobalSearchScope.projectScope(project))
+            val actionClassFile = JavaPsiFacade.getInstance(project)
+                .findClass(actionConfig.className, GlobalSearchScope.projectScope(project))
             if (actionClassFile != null) {
                 OpenSourceUtil.navigate(false, actionClassFile)
             }

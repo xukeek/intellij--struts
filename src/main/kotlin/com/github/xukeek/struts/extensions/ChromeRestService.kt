@@ -17,7 +17,11 @@ import java.io.OutputStream
 
 class ChromeRestService : RestService() {
 
-    override fun execute(urlDecoder: QueryStringDecoder, request: FullHttpRequest, context: ChannelHandlerContext): String? {
+    override fun execute(
+        urlDecoder: QueryStringDecoder,
+        request: FullHttpRequest,
+        context: ChannelHandlerContext
+    ): String? {
         val byteOut = BufferExposingByteArrayOutputStream()
         val parameters = urlDecoder.parameters()
         val parameterAction = parameters["action"]
@@ -27,7 +31,14 @@ class ChromeRestService : RestService() {
         }
         if (StringUtils.isNotEmpty(actionUrl)) {
             findActionAndOpenFile(byteOut, actionUrl)
-            Notifications.Bus.notify(Notification("Find Action", "Request to find action", actionUrl, NotificationType.INFORMATION))
+            Notifications.Bus.notify(
+                Notification(
+                    "Find Action",
+                    "Request to find action",
+                    actionUrl,
+                    NotificationType.INFORMATION
+                )
+            )
         }
         send(byteOut, request, context)
         return null

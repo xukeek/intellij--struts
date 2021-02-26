@@ -18,7 +18,8 @@ class MyProjectService(private val project: Project) {
     }
 
     fun getActionConfigs(): List<ActionConfig> {
-        val strutsFiles = FilenameIndex.getFilesByName(project, StrutsXmlUtil.FILE_NAME, GlobalSearchScope.allScope(project));
+        val strutsFiles =
+            FilenameIndex.getFilesByName(project, StrutsXmlUtil.FILE_NAME, GlobalSearchScope.allScope(project));
         for (strutsFile in strutsFiles) {
             if (!fileCache.containsKey(strutsFile.virtualFile.path)) {
                 fileCache[strutsFile.virtualFile.path] = StrutsXmlUtil.buildConfigs(strutsFile as XmlFile)

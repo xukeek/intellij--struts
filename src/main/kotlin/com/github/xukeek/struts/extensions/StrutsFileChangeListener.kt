@@ -16,7 +16,8 @@ class StrutsFileChangeListener : AsyncFileListener {
         return StrutsFileChangeApplier(events)
     }
 
-    inner class StrutsFileChangeApplier(private val events: MutableList<out VFileEvent>) : AsyncFileListener.ChangeApplier {
+    inner class StrutsFileChangeApplier(private val events: MutableList<out VFileEvent>) :
+        AsyncFileListener.ChangeApplier {
         override fun afterVfsChange() {
             for (event in events) {
                 if (event.isFromSave && event.file != null) {
@@ -25,7 +26,14 @@ class StrutsFileChangeListener : AsyncFileListener {
                         val openedProjects = ProjectManager.getInstance().openProjects
                         for (project in openedProjects) {
                             if (ProjectFileIndex.getInstance(project).isInContent(file)) {
-                                Notifications.Bus.notify(Notification("Struts", "Struts file changed", event.path, NotificationType.INFORMATION))
+                                Notifications.Bus.notify(
+                                    Notification(
+                                        "Struts",
+                                        "Struts file changed",
+                                        event.path,
+                                        NotificationType.INFORMATION
+                                    )
+                                )
                                 project.getService(MyProjectService::class.java).reloadFile(file)
                             }
                         }

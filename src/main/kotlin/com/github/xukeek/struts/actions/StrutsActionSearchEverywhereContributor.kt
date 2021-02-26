@@ -39,13 +39,18 @@ class StrutsActionSearchEverywhereContributor(event: @NotNull AnActionEvent) : R
         return true;
     }
 
-    override fun fetchWeightedElements(pattern: String, progressIndicator: ProgressIndicator, consumer: Processor<in FoundItemDescriptor<Any>>) {
+    override fun fetchWeightedElements(
+        pattern: String,
+        progressIndicator: ProgressIndicator,
+        consumer: Processor<in FoundItemDescriptor<Any>>
+    ) {
         if (myProject == null) return
 
         val projectService: MyProjectService = myProject.getService(MyProjectService::class.java)
 
         val searchString = filterControlSymbols(pattern)
-        val matchUrl = if (searchString.contains("_")) searchString.substring(0, searchString.indexOf("_")) else searchString
+        val matchUrl =
+            if (searchString.contains("_")) searchString.substring(0, searchString.indexOf("_")) else searchString
         val matcher = createMatcher(matchUrl)
         val opened = FileEditorManager.getInstance(myProject).selectedFiles
 
@@ -53,17 +58,20 @@ class StrutsActionSearchEverywhereContributor(event: @NotNull AnActionEvent) : R
         ProgressIndicatorUtils.yieldToPendingWriteActions()
 
         ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(
-                {
-                    var configs = projectService.getAllActionConfigs().stream()
-                    if (!StringUtil.isEmptyOrSpaces(searchString)) {
-                        configs = configs.filter { c -> matcher.matches(c.getServletFullPath()) }
-                    }
-                    res.addAll(configs
-                            .filter { c -> !opened.contains(c.xmlFile.virtualFile) && c.xmlFile.virtualFile.isValid }
-                            .flatMap { c -> c.getActionMethod(myProject, searchString).stream() }
-                            .map { m -> FoundItemDescriptor<Any>(m, matcher.matchingDegree(m.name)) }.collect(Collectors.toList()))
-                    ContainerUtil.process(res, consumer)
-                }, progressIndicator)
+            {
+                var configs = projectService.getAllActionConfigs().stream()
+                if (!StringUtil.isEmptyOrSpaces(searchString)) {
+                    configs = configs.filter { c -> matcher.matches(c.getServletFullPath()) }
+                }
+                res.addAll(configs
+                    .filter { c -> !opened.contains(c.xmlFile.virtualFile) && c.xmlFile.virtualFile.isValid }
+                    .flatMap { c -> c.getActionMethod(myProject, searchString).stream() }
+                    .map { m -> FoundItemDescriptor<Any>(m, matcher.matchingDegree(m.name)) }
+                    .collect(Collectors.toList())
+                )
+                ContainerUtil.process(res, consumer)
+            }, progressIndicator
+        )
     }
 
     private fun createMatcher(searchString: String): MinusculeMatcher {

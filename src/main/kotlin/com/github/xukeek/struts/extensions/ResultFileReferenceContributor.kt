@@ -9,8 +9,11 @@ import com.intellij.util.ProcessingContext
 
 class ResultFileReferenceContributor : PsiReferenceContributor() {
     override fun registerReferenceProviders(registrar: PsiReferenceRegistrar) {
-        registrar.registerReferenceProvider(XmlPatterns.xmlTag().withAttributeValue("type", "template")
-                .withLocalName("result").withNamespace("http://struts.apache.org/dtds/struts-2.0.dtd"), ResultFileReferenceProvider())
+        registrar.registerReferenceProvider(
+            XmlPatterns.xmlTag().withAttributeValue("type", "template")
+                .withLocalName("result").withNamespace("http://struts.apache.org/dtds/struts-2.0.dtd"),
+            ResultFileReferenceProvider()
+        )
     }
 
     inner class ResultFileReferenceProvider : PsiReferenceProvider() {
@@ -25,7 +28,8 @@ class ResultFileReferenceContributor : PsiReferenceContributor() {
             if (resultXmlTag.valid()) {
                 val project = element.project
                 //{xxx-system/xxx.ftl}
-                val allMethodReturnFiles: List<PsiFile> = StrutsXmlUtil.getActionViewFiles(project, listOf(resultXmlTag.mappedFilePath))
+                val allMethodReturnFiles: List<PsiFile> =
+                    StrutsXmlUtil.getActionViewFiles(project, listOf(resultXmlTag.mappedFilePath))
                 val results: MutableList<ResolveResult> = ArrayList(allMethodReturnFiles.size)
                 for (returnFile in allMethodReturnFiles) {
                     results.add(PsiElementResolveResult(returnFile))

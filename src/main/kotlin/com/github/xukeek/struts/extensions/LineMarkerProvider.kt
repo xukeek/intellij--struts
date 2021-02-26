@@ -16,7 +16,10 @@ import java.util.*
 
 class LineMarkerProvider : RelatedItemLineMarkerProvider() {
 
-    override fun collectNavigationMarkers(element: PsiElement, result: MutableCollection<in RelatedItemLineMarkerInfo<*>>) {
+    override fun collectNavigationMarkers(
+        element: PsiElement,
+        result: MutableCollection<in RelatedItemLineMarkerInfo<*>>
+    ) {
         val project = element.project
         val method: PsiElement? = element.parent
         if (element is PsiIdentifier && method is PsiMethod) {
@@ -29,14 +32,19 @@ class LineMarkerProvider : RelatedItemLineMarkerProvider() {
                     val psiClass: PsiClass? = method.containingClass
                     if (psiClass != null) {
                         val allMethodReturnStr: Set<String> = StrutsActionUtil.summarizeAllReturns(method)
-                        val allMethodReturnFilePaths = moduleActionConfigs.filter { a -> a.className == psiClass.qualifiedName }
-                                .flatMap { a -> a.getResultConfigs().filter { c -> allMethodReturnStr.contains(c.name) } }
+                        val allMethodReturnFilePaths =
+                            moduleActionConfigs.filter { a -> a.className == psiClass.qualifiedName }
+                                .flatMap { a ->
+                                    a.getResultConfigs().filter { c -> allMethodReturnStr.contains(c.name) }
+                                }
                                 .map { c -> c.viewPath }
                         aboutFiles.addAll(StrutsXmlUtil.getActionViewFiles(project, allMethodReturnFilePaths))
                     }
                     val targets = aboutFiles.toTypedArray()
                     if (aboutFiles.size > 0) {
-                        val builder = NavigationGutterIconBuilder.create(StrutsActionUtil.STRUTS_ICON).setTargets(*targets).setTooltipText("Navigate to a simple property")
+                        val builder =
+                            NavigationGutterIconBuilder.create(StrutsActionUtil.STRUTS_ICON).setTargets(*targets)
+                                .setTooltipText("Navigate to a simple property")
                         result.add(builder.createLineMarkerInfo(element))
                     }
                 }

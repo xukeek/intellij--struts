@@ -21,8 +21,7 @@ class TemplateFile(file: PsiFile) : Comparable<TemplateFile> {
         if (matcherSuffix.find()) {
             logicModuleName = matcherSuffix.group(0).replace("[/\\\\]".toRegex(), "")
             relativePath = paths[1].substring(matcherSuffix.end())
-        }
-        else {
+        } else {
             logicModuleName = fileLocateModuleName
             relativePath = paths[1]
         }

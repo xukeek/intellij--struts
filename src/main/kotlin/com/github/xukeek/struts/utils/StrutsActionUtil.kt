@@ -62,6 +62,6 @@ object StrutsActionUtil {
                 method.parameterList.parametersCount == 0 &&
                 method.modifierList.annotations.isNotEmpty() &&
                 Arrays.stream(method.modifierList.annotations)
-                        .anyMatch { a: PsiAnnotation -> ANNOTATION_NAMES.contains(a.qualifiedName) }
+                    .anyMatch { a: PsiAnnotation -> ANNOTATION_NAMES.contains(a.qualifiedName) }
     }
 }

@@ -9,7 +9,12 @@ import com.intellij.psi.xml.XmlFile
 import com.intellij.util.containers.stream
 import java.util.stream.Collectors
 
-class ActionConfig(val xmlFile: XmlFile, private val packageNameSpace: String, private val name: String, val className: String) {
+class ActionConfig(
+    val xmlFile: XmlFile,
+    private val packageNameSpace: String,
+    private val name: String,
+    val className: String
+) {
     private val resultConfigs: MutableList<ResultConfig> = ArrayList()
 
     fun addResultConfig(resultConfig: ResultConfig) {
@@ -30,8 +35,8 @@ class ActionConfig(val xmlFile: XmlFile, private val packageNameSpace: String, p
         println("url: $url -> methodName: $methodName")
         val classFile = JavaPsiFacade.getInstance(project).findClass(className, GlobalSearchScope.projectScope(project))
         if (classFile != null) {
-            result.addAll(classFile.allMethods.stream().filter {
-                m -> if (methodName == "execute") StrutsActionUtil.isStrutsMethod(m) else m.name == methodName
+            result.addAll(classFile.allMethods.stream().filter { m ->
+                if (methodName == "execute") StrutsActionUtil.isStrutsMethod(m) else m.name == methodName
             }.collect(Collectors.toList()))
         }
         return result
